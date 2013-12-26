@@ -125,7 +125,6 @@ int loadwordlist(const char * filename){
 	fclose(f);
 	//debug
 	for(i=0; i < count; i++){
-//		printf("%s\n", wordlist[i]);
 		wordsize += sizeof(wordlist[i]);
 	}
 	return count;
@@ -160,5 +159,20 @@ int main(int argc, char * argv[]){
 		findwords(board, skips, 0, "", 0, wordcount-1,pos);
 		}
 	}
-	return 1;
+
+
+	//cleanup
+	free(skips);
+	for(i = 0; i < BOARDY; i++){
+//		free(board[i]);
+//todo
+	}
+	free(board);
+
+	for(i = 0; i < wordcount; i++){
+		free(wordlist[i]);
+	}
+	free(wordlist);
+
+	return 0;
 }
