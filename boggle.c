@@ -11,6 +11,7 @@
 
 #define LEASTDEPTH 2
 #define FASTERCHECK
+//#define FASTERSEARCH
 
 
 
@@ -36,8 +37,35 @@ int findwords(char ** board, int * skips, int depth, char * line, int dictstart,
 
 
 	char current = board[pos[0]][pos[1]];
+
+#ifdef FASTERSEARCH
+	//collapse range down to within what it should be.
+	//similar to binary search
+	int origionalend = dictend;
+	int origionalstart = dictstart;
+	int check;
+	for(check = (dictstart + dictend)/2; dictend >= dictstart; check = (dictend + dictstart)/2){
+		if(wordlist[check][depth] < current) dictstart = check + 1;
+		else if(wordlist[check][depth] > current) dictend = check - 1;
+		else {
+			dictstart = check;
+			dictend = check;
+			break;
+		}
+	}
+
+	//expand back to fit
+	if(dictend != dictstart) return 0;
+	if(wordlist[dictend][depth] != current) return 0;
+	for(; dictstart > origionalstart && current == wordlist[dictstart][depth]; dictstart--); // used to be <
+	for(; dictend < origionalend && current == wordlist[dictend][depth]; dictend++); // used to be >
+#else
+
 	for(; dictstart <= dictend && current != wordlist[dictstart][depth]; dictstart++); // used to be <
 	for(; dictend >= dictstart && current != wordlist[dictend][depth]; dictend--); // used to be >
+
+#endif
+
 	if(dictstart > dictend) return 0; // used to be ==
 
 
