@@ -10,8 +10,8 @@
 #define MAXDEPTH 26
 
 #define LEASTDEPTH 2
-#define FASTERCHECK
-//#define FASTERSEARCH
+//#define FASTERCHECK
+#define FASTERSEARCH
 
 
 
@@ -59,7 +59,9 @@ int findwords(char ** board, int * skips, int depth, char * line, int dictstart,
 	if(wordlist[dictend][depth] != current) return 0;
 	for(; dictstart > origionalstart && current == wordlist[dictstart][depth]; dictstart--); // used to be <
 	for(; dictend < origionalend && current == wordlist[dictend][depth]; dictend++); // used to be >
+//#endif
 #else
+	//now trim off excess
 
 	for(; dictstart <= dictend && current != wordlist[dictstart][depth]; dictstart++); // used to be <
 	for(; dictend >= dictstart && current != wordlist[dictend][depth]; dictend--); // used to be >
