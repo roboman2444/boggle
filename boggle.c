@@ -36,24 +36,25 @@ int findwords(char ** board, int * skips, int depth, char * line, int dictstart,
 	for(; dictend >= dictstart && current != wordlist[dictend][depth]; dictend--); // used to be >
 	if(dictstart > dictend) return 0; // used to be ==
 
+
 	char * myline = malloc((depth+2)*sizeof(char));
 	sprintf(myline, "%s%c", line, current);
-/*
-	if(current == 'q'){
-		char * myline = malloc((depth+3)*sizeof(char));
-		sprintf(myline, "%s%cu", line, current);
-	}
-*/
 
 
 
 	if(depth > LEASTDEPTH){
 		int word;
 		for(word  = dictstart; word <= dictend; word++){
-			if(strcmp(myline, wordlist[word]) == 0){
+/*			if(strcmp(myline, wordlist[word]) == 0){
 				printf("%s\n", myline);
 				break;
 			}
+*/
+			if(wordlist[word][depth+1] == '\0'){
+				printf("%s\n", wordlist[word]);
+				break;
+			}
+
 		}
 	}
 
@@ -63,10 +64,10 @@ int findwords(char ** board, int * skips, int depth, char * line, int dictstart,
 
 	int x,y;
 	int newpos[2];
-	for(x = -1; x <= 1; x++){
+	for(x = -1; x < 2; x++){
 		newpos[0] = pos[0]+x;
-		for(y = -1; y <= 1; y++){
-			if(x == 0 && y ==0) continue;
+		for(y = -1; y < 2; y++){
+			if(x == 0 && y == 0) continue;
 			newpos[1] = pos[1]+y;
 			findwords(board, skips, depth+1, myline, dictstart, dictend, newpos);
 		}
@@ -151,12 +152,15 @@ int main(int argc, char * argv[]){
 	board[2] = "luoes";
 	board[3] = "itrax";
 	board[4] = "ohcec";
+
 	skips = malloc(MAXDEPTH * sizeof(int*));
+	memset(skips, -1, MAXDEPTH*2*sizeof(int));
+
 	int pos[2] = {0,0};
 	for(; pos[0] < BOARDX; pos[0]++){
 		for(pos[1] = 0; pos[1] < BOARDY; pos[1]++){
-		memset(skips, -1, MAXDEPTH*2*sizeof(int));
-		findwords(board, skips, 0, "", 0, wordcount-1,pos);
+//			memset(skips, -1, MAXDEPTH*2*sizeof(int));
+			findwords(board, skips, 0, "", 0, wordcount-1,pos);
 		}
 	}
 
